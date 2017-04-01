@@ -1,0 +1,3 @@
+[submodule "colorquant"]
+	path = colorquant
+	url = git@bitbucket.org:djdt/colorquant.git
