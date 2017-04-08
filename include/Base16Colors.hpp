@@ -4,7 +4,26 @@
 #include <array>
 #include <vector>
 
-const std::vector<std::array<uint8_t, 3>> base_16_eigthies = {
+const std::vector<std::string> base_16_eighties_names = {
+	"base00",
+	"base01",
+	"base02",
+	"base03",
+	"base04",
+	"base05",
+	"base06",
+	"base07",
+	"base08",
+	"base09",
+	"base0a",
+	"base0b",
+	"base0c",
+	"base0d",
+	"base0e",
+	"base0f",
+};
+
+const std::vector<std::array<uint8_t, 3>> base_16_eighties = {
 	{{0x2d, 0x2d, 0x2d}},
 	{{0x39, 0x39, 0x39}},
 	{{0x51, 0x51, 0x51}},

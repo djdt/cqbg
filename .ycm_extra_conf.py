@@ -21,7 +21,8 @@ flags = [
     '-x', language,
     '-I', '.',
     '-I', 'include',
-    '-I', 'colorquant/include'
+    '-I', 'rgb_funcs/include',
+    '-I', 'args_parse/include',
 ]
 
 

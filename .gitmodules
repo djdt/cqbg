@@ -1,3 +1,6 @@
-[submodule "colorquant"]
-	path = colorquant
-	url = git@bitbucket.org:djdt/colorquant.git
+[submodule "rgb_funcs"]
+	path = rgb_funcs
+	url = git@bitbucket.org:djdt/rgb_funcs.git
+[submodule "args_parse"]
+	path = args_parse
+	url = git@bitbucket.org:djdt/args_parse.git
