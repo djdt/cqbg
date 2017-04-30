@@ -15,8 +15,18 @@ void ColorWindow::onResize()
 
 ColorWindow::ColorWindow(const std::vector<RGBPixel>& colors, uint32_t num_rows)
 	:sf::RenderWindow(sf::VideoMode(1, 1), "BG Color Extract", sf::Style::Close),
-	 _num_rows(num_rows)
+	 _rows(num_rows)
 {
+	_cols = std::ceil(colors.size() / static_cast<double>(_rows));
+	sf::Vector2u size(GAP_X + _cols * (BLOCK_X + GAP_X),
+				            GAP_X + _rows * (BLOCK_Y + GAP_X));
+
+	this->setSize(size);
+	// Center the window
+	this->setPosition(sf::Vector2i(
+			(sf::VideoMode::getDesktopMode().width  - size.x) * 0.5f,
+			(sf::VideoMode::getDesktopMode().height - size.y) * 0.5f));
+
 	this->setVerticalSyncEnabled(true);
 	this->setFramerateLimit(60);
 	UpdateColors(colors);
@@ -24,14 +34,6 @@ ColorWindow::ColorWindow(const std::vector<RGBPixel>& colors, uint32_t num_rows)
 
 void ColorWindow::UpdateColors(const std::vector<RGBPixel>& colors)
 {
-	/* std::sort(colors.begin(), colors.end(), [] (const RGBPixel& a, const RGBPixel& b) { */
-	/* 		return ((a[0] + a[1] + a[2]) < b[0] + b[1] + b[2]); */
-	/* }); */
-	uint32_t num_cols = std::ceil(colors.size() / static_cast<double>(_num_rows));
-	sf::Vector2u size(GAP_X +  num_cols * (BLOCK_X + GAP_X),
-	                  GAP_X + _num_rows * (BLOCK_Y + GAP_X));
-	this->setSize(size);
-
 	_colors.clear();
 	_colors.reserve(colors.size());
 
@@ -42,7 +44,7 @@ void ColorWindow::UpdateColors(const std::vector<RGBPixel>& colors)
 		shape.setOutlineColor(sf::Color(c[0], c[1], c[2], 255));
 		shape.setPosition(GAP_X + col * (BLOCK_X + GAP_X), GAP_X + row * (BLOCK_Y + GAP_X));
 		_colors.push_back(shape);
-		if (++col > (num_cols - 1)) {
+		if (++col > (_cols - 1)) {
 			col = 0;
 			row++;
 		}

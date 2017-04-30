@@ -16,7 +16,7 @@ class ColorWindow : public sf::RenderWindow
 {
 	private:
 		bool _show_match_colors;
-		uint32_t _num_rows;
+		uint32_t _rows, _cols;
 		std::vector<sf::RectangleShape> _colors;
 
 		void onResize();
