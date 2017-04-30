@@ -8,70 +8,62 @@
 #include "RGBMatchColors.hpp"
 #include "RGBQuantize/Octree.hpp"
 
+#include "AnsiColors.hpp"
 #include "Base16Colors.hpp"
 #include "ColorWindow.hpp"
-#include "Parsei3status.hpp"
 #include "XCBRootImage.hpp"
+
+#define COMPARE_COLORS ansi_colors_22
 
 std::vector<RGBPixel> extractColors(uint32_t num_colors)
 {
 	auto img_data = XCBGetRootImage();
 	auto colors = rgb::quantizeOctree(img_data, num_colors, 4);
-	colors = rgb::matchColors(colors, base_16_eighties);
+	colors = rgb::matchColors(colors, COMPARE_COLORS);
 	return colors;
 }
 
-std::vector<std::string> getColorHexes(
-		const std::vector<RGBPixel>& colors)
+std::string colorHex(const RGBPixel& color)
 {
-	std::vector<std::string> hexes;
-	for (auto color : colors) {
-		std::stringstream hex;
-		hex << "#";
-		for (auto v : color) {
-			hex << std::setfill('0') << std::setw(2) << std::hex;
-			hex << static_cast<int>(v);
-
-		}
-		hexes.push_back(hex.str());
+	std::stringstream hex("");
+	hex << "#";
+	for (auto v : color) {
+		hex << std::setfill('0') << std::setw(2) << std::hex;
+		hex << static_cast<int>(v);
 	}
-	return hexes;
+	return hex.str();
 }
 
 int32_t main(int32_t argc, const char* argv[])
 {
 	argsparse::Parser parser("cqBG");
+	parser.addText("Window Keys:\n\t(r) : reload the colors.");
 	parser.addOption("help", 'h', "print help message and exit");
-	parser.addOption("output", 'o', "output colors to xresources file", std::string("/home/tom/.Xresources"), 0);
 	parser.addOption("compare", 'c', "print/display compare colors");
-	parser.addOption("number", 'n', "number of extracted colors", 64);
+	parser.addOption("default", 'd', "use default colors");
+	/* parser.addOption("number", 'n', "number of extracted colors", 96); */
+	parser.addOption("output", 'o', "output colors to cout");
 
 	if (!parser.parse(argc, argv) || parser["help"].count) {
 		std::cout << parser << std::endl;
 		return 0;
 	}
 
-	auto colors = extractColors(parser["number"].as<int32_t>());
+	std::vector<RGBPixel> colors;
+	if (parser["default"]) {
+		colors = base_16_eighties;
+	} else {
+		/* colors = extractColors(parser["number"].as<int32_t>()); */
+		colors = extractColors(96);
+	}
 	if (parser["compare"].count) {
-		colors.insert(colors.end(), base_16_eighties.begin(), base_16_eighties.end());
+		colors.insert(colors.end(), COMPARE_COLORS.begin(), COMPARE_COLORS.end());
 	}
 
 	if (parser["output"].count) {
-		std::ofstream ofs(parser["output"].as<std::string>(), std::ios::out);
-
-		auto hexes = getColorHexes(colors);
-		for (size_t i = 0; i < hexes.size(); ++i) {
-			ofs << "*"  << base_16_eighties_names[i];
-			ofs << ": " << hexes[i];
-			ofs << "\n";
+		for (const auto& color : colors) {
+			std::cout << colorHex(color) << std::endl;
 		}
-
-		ofs.close();
-
-		parsei3StatusConfig("/home/tom/.i3/i3status.conf.template",
-				"/home/tom/.i3/i3status.conf", hexes);
-
-		std::system("xrdb ~/.Xresources");
 		return 0;
 	}
 
@@ -90,7 +82,7 @@ int32_t main(int32_t argc, const char* argv[])
 						colors = extractColors(64);
 						if (parser["compare"].count)
 							colors.insert(colors.end(),
-									base_16_eighties.begin(), base_16_eighties.end());
+									COMPARE_COLORS.begin(), COMPARE_COLORS.end());
 						window.UpdateColors(colors);
 						break;
 					default:
