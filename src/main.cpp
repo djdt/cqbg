@@ -44,7 +44,7 @@ int32_t main(int32_t argc, const char* argv[])
 	/* parser.addOption("number", 'n', "number of extracted colors", 96); */
 	parser.addOption("output", 'o', "output colors to cout");
 
-	if (!parser.parse(argc, argv) || parser["help"].count) {
+	if (!parser.parse(argc, argv) || parser["help"]) {
 		std::cout << parser << std::endl;
 		return 0;
 	}
@@ -56,18 +56,18 @@ int32_t main(int32_t argc, const char* argv[])
 		/* colors = extractColors(parser["number"].as<int32_t>()); */
 		colors = extractColors(96);
 	}
-	if (parser["compare"].count) {
+	if (parser["compare"]) {
 		colors.insert(colors.end(), COMPARE_COLORS.begin(), COMPARE_COLORS.end());
 	}
 
-	if (parser["output"].count) {
+	if (parser["output"]) {
 		for (const auto& color : colors) {
 			std::cout << colorHex(color) << std::endl;
 		}
 		return 0;
 	}
 
-	ColorWindow window(colors, parser["compare"].count ? 2 : 1);
+	ColorWindow window(colors, parser["compare"] ? 2 : 1);
 	while (window.isOpen()) {
 		sf::Event e;
 		while (window.pollEvent(e)) {
@@ -79,8 +79,8 @@ int32_t main(int32_t argc, const char* argv[])
 						window.close();
 						break;
 					case sf::Keyboard::R:
-						colors = extractColors(64);
-						if (parser["compare"].count)
+						colors = extractColors(96);
+						if (parser["compare"])
 							colors.insert(colors.end(),
 									COMPARE_COLORS.begin(), COMPARE_COLORS.end());
 						window.UpdateColors(colors);
