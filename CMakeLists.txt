@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(cqBG)
+project(cqbg)
 
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 
@@ -13,7 +13,7 @@ find_package(XCB REQUIRED COMPONENTS xcb xcb_image)
 find_package(SFML REQUIRED COMPONENTS system window graphics)
 
 include_directories(
-	${cqBG_SOURCE_DIR}/include
+	${${PROJECT_NAME}_SOURCE_DIR}/include
 	${ArgsParse_SOURCE_DIR}/include
 	${RGBFuncs_SOURCE_DIR}/include
 	${Boost_INCLUDE_DIRS}
@@ -21,13 +21,13 @@ include_directories(
 	${SFML_INCLUDE_DIRS}
 )
 
-file(GLOB_RECURSE sources_cq ${cqBG_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE SRC_FILES ${${PROJECT_NAME}_SOURCE_DIR}/src/*.cpp)
 
-add_executable(cqBG ${sources_cq})
+add_executable(${PROJECT_NAME} ${SRC_FILES})
 
-target_link_libraries(cqBG
-	RGBFuncs
-	ArgsParse
+target_link_libraries(${PROJECT_NAME}
+	rgb_funcs
+	args_parse
 	${Boost_LIBRARIES}
 	${XCB_LIBRARIES}
 	${SFML_LIBRARIES}
