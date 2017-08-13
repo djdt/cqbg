@@ -1,6 +1,3 @@
-[submodule "rgb_funcs"]
-	path = rgb_funcs
-	url = git@bitbucket.org:djdt/rgb_funcs.git
 [submodule "args_parse"]
 	path = args_parse
-	url = git@bitbucket.org:djdt/args_parse.git
+	url = git@github.com:djdt/args_parse.git
